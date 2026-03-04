@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casa Noctua</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --violeta-oscuro: #1C0D2D;
+            --blanco-roto: #E2DED3;
+            --amarillo: #E8E31C;
+            --violeta-medio: #2A1540;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--violeta-oscuro);
+            color: var(--blanco-roto);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ── Starfield canvas ── */
+        #starfield {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ── Main wrapper ── */
+        .wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 480px;
+            padding: 48px 24px 64px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0;
+        }
+
+        /* ── Logo / Header ── */
+        .brand {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .owl-icon {
+            font-size: 3.5rem;
+            display: block;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 0 18px rgba(232,227,28,0.45));
+            animation: floatOwl 4s ease-in-out infinite;
+        }
+
+        @keyframes floatOwl {
+            0%, 100% { transform: translateY(0); }
+            50%       { transform: translateY(-8px); }
+        }
+
+        .brand-name {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--blanco-roto);
+            text-shadow: 0 0 30px rgba(232,227,28,0.2);
+        }
+
+        .brand-tagline {
+            font-size: 0.8rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--amarillo);
+            opacity: 0.8;
+            margin-top: 6px;
+        }
+
+        /* ── Divider ── */
+        .divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--amarillo), transparent);
+            margin: 24px auto 36px;
+        }
+
+        /* ── Link cards ── */
+        .links {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .link-card {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 22px;
+            border-radius: 14px;
+            border: 1px solid rgba(226,222,211,0.15);
+            background: rgba(42, 21, 64, 0.5);
+            backdrop-filter: blur(8px);
+            text-decoration: none;
+            color: var(--blanco-roto);
+            cursor: pointer;
+            transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .link-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(232,227,28,0.06) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.35s ease;
+        }
+
+        .link-card:hover::before {
+            opacity: 1;
+        }
+
+        .link-card:hover {
+            border-color: var(--amarillo);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 8px 32px rgba(232,227,28,0.15), 0 0 0 1px rgba(232,227,28,0.2);
+        }
+
+        .link-card:active {
+            transform: translateY(0) scale(0.99);
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+            transition: transform 0.35s ease;
+        }
+
+        .link-card:hover .card-icon {
+            transform: scale(1.1) rotate(-4deg);
+        }
+
+        .icon-yt   { background: rgba(255, 0, 0, 0.15); }
+        .icon-tt   { background: rgba(0, 242, 234, 0.1); }
+        .icon-ig   { background: rgba(225, 48, 108, 0.12); }
+        .icon-sp   { background: rgba(30, 215, 96, 0.12); }
+
+        .card-text {
+            flex: 1;
+        }
+
+        .card-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--amarillo);
+            opacity: 0.75;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .card-name {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .card-arrow {
+            font-size: 1rem;
+            opacity: 0.4;
+            transition: all 0.35s ease;
+            flex-shrink: 0;
+        }
+
+        .link-card:hover .card-arrow {
+            opacity: 1;
+            transform: translateX(4px);
+            color: var(--amarillo);
+        }
+
+        /* ── Footer ── */
+        .footer {
+            margin-top: 48px;
+            text-align: center;
+            opacity: 0.35;
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* ── Shooting star ── */
+        .shooting-star {
+            position: fixed;
+            width: 2px;
+            height: 2px;
+            background: var(--amarillo);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .shooting-star::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--amarillo));
+        }
+
+        /* ── Entrance animations ── */
+        .brand    { animation: fadeUp 0.7s ease both; }
+        .divider  { animation: fadeUp 0.7s 0.15s ease both; }
+        .link-card:nth-child(1) { animation: fadeUp 0.6s 0.25s ease both; }
+        .link-card:nth-child(2) { animation: fadeUp 0.6s 0.35s ease both; }
+        .link-card:nth-child(3) { animation: fadeUp 0.6s 0.45s ease both; }
+        .link-card:nth-child(4) { animation: fadeUp 0.6s 0.55s ease both; }
+        .footer   { animation: fadeUp 0.6s 0.7s ease both; }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="starfield"></canvas>
+
+<div class="wrapper">
+
+    <div class="brand">
+        <span class="owl-icon">🦉</span>
+        <div class="brand-name">Casa Noctua</div>
+        <div class="brand-tagline">Sello Discográfico</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="links">
+
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@CasaNoctua" target="_blank" rel="noopener" class="link-card">
+            <div class="card-icon icon-yt">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#FF0000"/>
+                </svg>
+            </div>
+            <div class="card-text">
+                <span class="card-label">YouTube</span>
+                <span class="card-name">@CasaNoctua</span>
+            </div>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@casanoctua?lang=es-419" target="_blank" rel="noopener" class="link-card">
+            <div class="card-icon icon-tt">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.73a4.85 4.85 0 0 1-1.01-.04z" fill="#ffffff"/>
+                </svg>
+            </div>
+            <div class="card-text">
+                <span class="card-label">TikTok</span>
+                <span class="card-name">@casanoctua</span>
+            </div>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/casanoctua/" target="_blank" rel="noopener" class="link-card">
+            <div class="card-icon icon-ig">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                            <stop offset="0%" style="stop-color:#f09433"/>
+                            <stop offset="25%" style="stop-color:#e6683c"/>
+                            <stop offset="50%" style="stop-color:#dc2743"/>
+                            <stop offset="75%" style="stop-color:#cc2366"/>
+                            <stop offset="100%" style="stop-color:#bc1888"/>
+                        </linearGradient>
+                    </defs>
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z" fill="url(#ig-grad)"/>
+                </svg>
+            </div>
+            <div class="card-text">
+                <span class="card-label">Instagram</span>
+                <span class="card-name">@casanoctua</span>
+            </div>
+            <span class="card-arrow">→</span>
+        </a>
+
+        <!-- Spotify -->
+        <a href="https://open.spotify.com/playlist/65ebglPB1AOXceOFfV5wGs?si=L43YKtEQTXudTgHQMcK60g&pi=ngdbF-89SK69u" target="_blank" rel="noopener" class="link-card">
+            <div class="card-icon icon-sp">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" fill="#1DB954"/>
+                </svg>
+            </div>
+            <div class="card-text">
+                <span class="card-label">Spotify</span>
+                <span class="card-name">Últimos Lanzamientos</span>
+            </div>
+            <span class="card-arrow">→</span>
+        </a>
+
+    </div>
+
+    <div class="footer">© 2026 Casa Noctua · Todos los derechos reservados</div>
+</div>
+
+<script>
+/* ── Starfield ── */
+(function () {
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+    let W, H, stars = [];
+
+    function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+    }
+
+    function randomStar() {
+        return {
+            x: Math.random() * W,
+            y: Math.random() * H,
+            r: Math.random() * 1.4 + 0.3,
+            alpha: Math.random() * 0.6 + 0.2,
+            twinkleSpeed: Math.random() * 0.02 + 0.005,
+            twinkleDir: Math.random() > 0.5 ? 1 : -1,
+            // star-shape (4 or 6 points)
+            points: Math.random() > 0.7 ? 4 : 2
+        };
+    }
+
+    function init() {
+        resize();
+        stars = Array.from({ length: 180 }, randomStar);
+    }
+
+    function drawStar(x, y, r, alpha, points) {
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = '#E8E31C';
+        ctx.translate(x, y);
+
+        if (points === 2) {
+            // simple circle for smaller stars
+            ctx.beginPath();
+            ctx.arc(0, 0, r, 0, Math.PI * 2);
+            ctx.fill();
+        } else {
+            // 4-pointed star
+            const outer = r * 2.2;
+            const inner = r * 0.8;
+            ctx.beginPath();
+            for (let i = 0; i < 8; i++) {
+                const angle = (i * Math.PI) / 4;
+                const radius = i % 2 === 0 ? outer : inner;
+                if (i === 0) ctx.moveTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+                else ctx.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+            }
+            ctx.closePath();
+            ctx.fill();
+        }
+        ctx.restore();
+    }
+
+    function animate() {
+        ctx.clearRect(0, 0, W, H);
+
+        stars.forEach(s => {
+            s.alpha += s.twinkleSpeed * s.twinkleDir;
+            if (s.alpha > 0.85 || s.alpha < 0.1) s.twinkleDir *= -1;
+            drawStar(s.x, s.y, s.r, s.alpha, s.points);
+        });
+
+        requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', () => { resize(); stars = Array.from({ length: 180 }, randomStar); });
+    init();
+    animate();
+})();
+
+/* ── Shooting stars ── */
+(function () {
+    function shoot() {
+        const el = document.createElement('div');
+        el.className = 'shooting-star';
+        const startX = Math.random() * window.innerWidth;
+        const startY = Math.random() * window.innerHeight * 0.5;
+        el.style.cssText = `left:${startX}px;top:${startY}px;`;
+        document.body.appendChild(el);
+
+        const duration = 800 + Math.random() * 600;
+        el.animate([
+            { transform: 'translate(0,0)', opacity: 1 },
+            { transform: `translate(${120 + Math.random()*80}px,${60 + Math.random()*40}px)`, opacity: 0 }
+        ], { duration, easing: 'ease-out', fill: 'forwards' }).onfinish = () => el.remove();
+
+        setTimeout(shoot, 2500 + Math.random() * 3500);
+    }
+    setTimeout(shoot, 1200);
+})();
+</script>
+</body>
+</html>
